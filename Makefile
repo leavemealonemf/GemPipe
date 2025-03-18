@@ -1,6 +1,6 @@
 
 LIBS = -lcjson
-OUTPUT = pipe
+OUTPUT = gempipe
 
 add:
 	gcc -Wall -o $(OUTPUT) $(LIBS) main.c
