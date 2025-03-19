@@ -6,7 +6,7 @@ OUTPUT = gempipe
 all: gempipe
 
 gempipe: main.c
-	$(CC) $(CFLAGS) -o $(OUTPUT) main.c libcjson.a
+	$(CC) $(CFLAGS) -o $(OUTPUT) main.c external/libcjson.a
 
 clean:
 	rm -f $(OUTPUT)
