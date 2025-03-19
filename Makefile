@@ -1,9 +1,13 @@
-
-LIBS = -lcjson
+CC = gcc
+CFLAGS = -Wall -I.
+LDFLAGS = -L. -lcjson
 OUTPUT = gempipe
 
-add:
-	gcc -Wall -o $(OUTPUT) $(LIBS) main.c
+all: gempipe
 
-clear:
-	rm pipe
+gempipe: main.c
+	$(CC) $(CFLAGS) -o $(OUTPUT) main.c libcjson.a
+
+clean:
+	rm -f $(OUTPUT)
+
