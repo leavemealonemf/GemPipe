@@ -8,9 +8,10 @@
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 #define BUFFER_SIZ 1024
+#define FLAGS_SIZ 4
+#define AVG_FLAG_SIZ 20
 
 char buffer[BUFFER_SIZ];
-char main_gem[] = "gem_config_2.json";
 char cfg_dir[] = "./gems";
 
 int get_gemdir_len() {
@@ -52,6 +53,22 @@ char** read_config_dir(int gems_siz) {
     }
 
     return gems;
+}
+
+void gems_list() {
+    int siz = get_gemdir_len();
+    char **gems = read_config_dir(siz);
+    if (gems == NULL) {
+        printf("Config folder is empty.\n");
+        exit(EXIT_SUCCESS);
+    }
+    printf("Available configs:\n");
+    for (int i = 0; i < siz; i++)
+    {
+        printf("%s\n", gems[i]);
+        free(gems[i]);
+    }
+    free(gems);
 }
 
 char** read_gem(int *siz, char *r_addr, char *r_pass, char *gem) {
@@ -100,15 +117,41 @@ char** read_gem(int *siz, char *r_addr, char *r_pass, char *gem) {
 
 int main(int argc, char **argv)
 {    
+    char flags[FLAGS_SIZ][AVG_FLAG_SIZ] = {"-h", "--help", "--list", "--info"};
 
     if (argc < 2) {
         printf("Too few arguments.\nPrint -h or --help to get help.\n");
         return EXIT_FAILURE;
     }
 
+    if (atoi(argv[1]) == 0) {
+        int is_exist = 0;
+        for (int i = 0; i < FLAGS_SIZ; i++)
+        {
+            if ((strcmp(argv[1], flags[i])) == 0) {
+                is_exist = 1;
+            }
+        }
+        if (is_exist == 0) {
+            printf("unknown flag: %s\n", argv[1]);
+            exit(EXIT_FAILURE);
+        }
+    }
+
     if ((strcmp(argv[1], "--help") == 0) || (strcmp(argv[1], "-h")) == 0) {
-        printf("GEM HELP:\nFirst of all you need to create a config in \"gem\" folder.\nThen you can run program. Provide a config number to execute program with it.\nFor example: pipe 1\n\nMore information here: https://github.com/leavemealonemf/GemPipe\n");
+        printf("GEM HELP:\nFirst of all you need to create a config in \"gem\" folder.\nThen you can run program. Provide a config number to execute program with it.\nFor example: gempipe 1\n\nHelpful flags:\n--help or -h - get help\n--list - get list of configs\n--info [config number] - to get information about provided config\n\nMore information here: https://github.com/leavemealonemf/GemPipe\n");
         exit(EXIT_SUCCESS);
+    } else if ((strcmp(argv[1], "--list")) == 0) {
+        gems_list();
+        exit(EXIT_SUCCESS);
+    } else if ((strcmp(argv[1], "--info") == 0)) {
+        if (argc >= 3 && (atoi(argv[2]) > 0)) {
+            
+            exit(EXIT_FAILURE);
+        } else {
+            printf("Please. Provide a config number to get information.\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
 
